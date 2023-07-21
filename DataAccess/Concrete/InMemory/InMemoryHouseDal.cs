@@ -1,5 +1,6 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace DataAccess.Concrete.InMemory
             //SingleOrDefault tek bir eleman bulmaya yarar
             //p tek tek dolasirken kullanilan takma isim
 
-            House houseToDelete = _houses.SingleOrDefault(p=>p.HouseId == house.HouseId);
+            House houseToDelete = _houses.SingleOrDefault(p => p.HouseId == house.HouseId);
         }
 
         public House get(Expression<Func<House, bool>> filter)
@@ -62,13 +63,18 @@ namespace DataAccess.Concrete.InMemory
             //where komutu icerisine tum sartlara uyan tum elemanlari yeni bir listeleyip goruntuler
         }
 
+        public List<HouseDetailDto> GetHouseDetails()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(House house)
         {
             //Gonderilen urun id'sine sahip urunu bul
             House houseToUpdate = _houses.SingleOrDefault(p => p.HouseId == house.HouseId);
             houseToUpdate.HouseName = house.HouseName;
             houseToUpdate.Price = house.Price;
-            
+
         }
     }
 }

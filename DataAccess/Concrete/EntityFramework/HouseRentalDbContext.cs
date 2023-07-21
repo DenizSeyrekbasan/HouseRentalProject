@@ -20,5 +20,6 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<House> Houses { get; set; } //DbSet ile entitieslerimizi ve table'larimizi eslestiriyoruz
         public DbSet<HouseCategory> HouseCategories { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<City> Cities{ get; set; }
     }
 }

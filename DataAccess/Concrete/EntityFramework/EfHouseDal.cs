@@ -7,60 +7,32 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DataAccess.EntityFramework;
+using Entities.DTO;
+using System.Diagnostics.Metrics;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfHouseDal : IHouseDal
+    public class EfHouseDal : EfEntityRepositoryBase<House, HouseRentalDbContext>, IHouseDal
     {
-        public void Add(House entity)
+        public List<HouseDetailDto> GetHouseDetails()
         {
             using (HouseRentalDbContext context = new HouseRentalDbContext())
             {
-                var addedEntity = context.Entry(entity); //db'de veri kaynagiyla eslestirme kodu
-                addedEntity.State = EntityState.Added; //eklenecek nesne oldugunu belirtiyoruz
-                context.SaveChanges();
-            }
-        }
+                //linq sorgusu ile join islemi gerceklestiricez
+                var result = from p in context.Houses
+                             join c in context.HouseCategories
+                             on p.HouseCategoryId equals c.HouseCategoryId
+                             select new HouseDetailDto
+                             {
+                                 HouseId = p.HouseId,
+                                 HouseName = p.HouseName,
+                                 Price = p.Price,
+                                 CityId = p.CityId,
+                                 HouseCategoryId = c.HouseCategoryId
 
-        public void Delete(House entity)
-        {
-            using (HouseRentalDbContext context = new HouseRentalDbContext())
-            {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
-
-        public House get(Expression<Func<House, bool>> filter)
-        {
-            //tek data dondurecek
-            using (HouseRentalDbContext context = new HouseRentalDbContext())
-            {
-                return context.Set<House>().SingleOrDefault(filter);
-            }
-        }
-
-        public List<House> GetAll(Expression<Func<House, bool>> filter = null)
-        {
-            //filtre dondurecek
-            using (HouseRentalDbContext context = new HouseRentalDbContext())
-            {
-                return filter == null
-                    ? context.Set<House>().ToList()
-                    : context.Set<House>().Where(filter).ToList();
-
-                //eger filtre null gelirse tum datayi dondur, null gelmezse filteli dondur
-            }
-        }
-
-        public void Update(House entity)
-        {
-            using (HouseRentalDbContext context = new HouseRentalDbContext())
-            {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;
-                context.SaveChanges();
+                                 };
+                return result.ToList();
             }
         }
     }
