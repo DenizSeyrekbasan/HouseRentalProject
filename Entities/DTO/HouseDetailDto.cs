@@ -12,8 +12,7 @@ namespace Entities.DTO
     {
         public int HouseId { get; set; }
         public int HouseCategoryId { get; set; }
-        public string HouseName { get; set; }
-        public int Price { get; set; }
-        public int CityId { get; set; }
+        public string HouseName { get; set; } 
+        public string HouseCategoryName { get; set; }
     }
 }

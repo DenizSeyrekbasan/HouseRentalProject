@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constans;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -18,19 +20,20 @@ namespace Business.Concrete
             _cityDal = cityDal;
         }
 
-        public void Add(City city)
+        public IResult Add(City city)
         {
             _cityDal.Add(city);
+            return new SuccessResult(Messages.CityAdded);
         }
 
-        public List<City> GetAll()
+        public IDataResult<List<City>> GetAll()
         {
-            return _cityDal.GetAll();
+            return new SuccessDataResult<List<City>>(_cityDal.GetAll(), Messages.CityGetAll);
         }
 
-        public List<City> GetAllByCategoryId(int id)
+        public IDataResult<List<City>> GetAllByCategoryId(int id)
         {
-            return _cityDal.GetAll(p => p.CityId == id);
+            return new SuccessDataResult<List<City>>(_cityDal.GetAll(p => p.CityId == id));
         }
     }
 }

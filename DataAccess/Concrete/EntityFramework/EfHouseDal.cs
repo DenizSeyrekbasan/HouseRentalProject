@@ -27,9 +27,8 @@ namespace DataAccess.Concrete.EntityFramework
                              {
                                  HouseId = p.HouseId,
                                  HouseName = p.HouseName,
-                                 Price = p.Price,
-                                 CityId = p.CityId,
-                                 HouseCategoryId = c.HouseCategoryId
+                                 HouseCategoryId = p.HouseCategoryId,
+                                 HouseCategoryName = c.HouseCategoryName
 
                                  };
                 return result.ToList();

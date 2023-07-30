@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constans;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -11,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
+    //business code'larini buraya yaziyoruz
+    //ornegin ekleme islemi yaparken sart kostugumuzda sartlari saglarsa ekleme islemi yapilir
     public class HouseManager : IHouseService
     {
         IHouseDal _houseDal; 
@@ -23,37 +27,53 @@ namespace Business.Concrete
             _houseDal = houseDal;
         }
 
-        public void Add(House house)
+        public IResult Add(House house)
         {
+            if (house.HouseName.Length < 2)
+            {
+                return new ErrorResult(Messages.HouseNameInvalid);
+            }
+
             _houseDal.Add(house);
+            return new SuccessResult(Messages.HouseAdded);
         }
 
-        public List<House> GetAll()
+        public IDataResult<List<House>> GetAll()
         {
             //is kodlari
-            return _houseDal.GetAll();
+            return new SuccessDataResult<List<House>>(_houseDal.GetAll(),Messages.HousesListed);
         }
 
-        public List<House> GetAllByCategoryId(int id)
+        public IDataResult<List<House>> GetAllByCategoryId(int id)
         {
-            return _houseDal.GetAll(p => p.HouseCategoryId == id); 
+            return new SuccessDataResult<List<House>>(_houseDal.GetAll(p => p.HouseCategoryId == id)); 
             //her p icin p'nin categoryId'si gonderilen id'ye esit ise onlari filtrele
         }
 
-        public List<House> GetAllCity(int cityId)
+        public IDataResult<List<House>> GetAllCity(int cityId)
         {
-            return _houseDal.GetAll(p => p.CityId == cityId);
+            return new SuccessDataResult<List<House>> (_houseDal.GetAll(p => p.CityId == cityId));
             //Filter of Antalya Houses
         }
 
-        public List<House> GetallUnitPrice(decimal min, decimal max)
+        public IDataResult<List<House>> GetAllUnitPrice(decimal min, decimal max)
         {
-            return _houseDal.GetAll(p => p.Price >= min && p.Price <= max); //iki fiyat arasi data
+            return new SuccessDataResult<List<House>> (_houseDal.GetAll(p => p.Price >= min && p.Price <= max)); //iki fiyat arasi data
         }
 
-        public List<HouseDetailDto> GetHouseDetails()
+        public IDataResult<House> GetById(int houseId)
         {
-            return _houseDal.GetHouseDetails();
+            return new SuccessDataResult<House>(_houseDal.get(p => p.HouseId == houseId));
+        }
+
+        public IDataResult<List<HouseDetailDto>> GetHouseDetails()
+        {
+            if (DateTime.Now.Hour == 12)
+            {
+                return new ErrorDataResult<List<HouseDetailDto>>(Messages.MaintanceTime);
+            }
+
+            return new SuccessDataResult<List<HouseDetailDto>> (_houseDal.GetHouseDetails());
         }
     }
 }

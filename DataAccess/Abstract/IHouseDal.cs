@@ -11,6 +11,6 @@ namespace DataAccess.Abstract
 {
     public interface IHouseDal : IEntityRepository<House>
     {
-        List<HouseDetailDto> GetHouseDetails();
+        List<HouseDetailDto> GetHouseDetails(); //DTO
     }
 }
