@@ -11,12 +11,47 @@ namespace WebAPI.Controllers
     [ApiController] //Attribute
     public class HousesController : ControllerBase
     {
-        [HttpGet]
-        public string Get()
+        //IHouseService turunde field
+        IHouseService _houseService;
+
+        //Loosely coupled - gevsek bagimlilik, soyuta bagimlilik
+        public HousesController(IHouseService houseService)
         {
-            IHouseService houseService = new HouseManager(new EfHouseDal());
-            var result = houseService.GetAll();
-            return result.Message;
+            _houseService = houseService;
+        }
+
+        [HttpGet("getall")] 
+        public IActionResult GetAllById()
+        {
+            //Dependency chain --bagimlilik
+            var result = _houseService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyid")]
+        public IActionResult Get(int id)
+        {
+            var result = _houseService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("add")]
+        public IActionResult Add(House house)
+        {
+            var result = _houseService.Add(house);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result); 
 
         }
     }

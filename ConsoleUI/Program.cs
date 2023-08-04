@@ -21,7 +21,17 @@ namespace ConsoleUI
             //HouseDtoResultMessageTest();
             //CityNameAddedResultTest();
             //HouseAddedErrorResultTest();
+            //HouseGetAllTest();
 
+        }
+
+        private static void HouseGetAllTest()
+        {
+            HouseManager houseManager = new HouseManager(new EfHouseDal());
+            foreach (var house in houseManager.GetAll().Data)
+            {
+                Console.WriteLine(house.HouseName);
+            }
         }
 
         private static void HouseAddedErrorResultTest()

@@ -8,6 +8,7 @@ using Entities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,12 @@ namespace Business.Concrete
         public IDataResult<List<House>> GetAll()
         {
             //is kodlari
+
+            if (DateTime.Now.Hour==15)
+            {
+                return new ErrorDataResult<List<House>>(Messages.MaintanceTime);
+            }
+
             return new SuccessDataResult<List<House>>(_houseDal.GetAll(),Messages.HousesListed);
         }
 

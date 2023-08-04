@@ -1,11 +1,26 @@
+using Business.Abstract;
+using Business.Concrete;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IHouseService,HouseManager>(); //HouseService istenildiginde ona arka planda HouseManager new'i olusturur
+builder.Services.AddSingleton<IHouseDal, EfHouseDal>();
+
+builder.Services.AddSingleton<IUserService, UserManager>();
+builder.Services.AddSingleton<IUserDal, EfUserDal>();
+
+builder.Services.AddSingleton<ICityService, CityManager>();
+builder.Services.AddSingleton<ICityDal, EfCityDal>();
+
 
 var app = builder.Build();
 
